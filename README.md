@@ -3,14 +3,16 @@ Instructions to setup OpenStack to send cadf messages to QRadar:
 Download the attached file named juno_fix.tar and untar to a
 directory on both nova api node and ceilometer node.
 
-On nova api node:
-1.	Run sudo ./patch_nova.sh
-2.	Restart node api service.
+On nova api node::
 
-On ceilometer node:
-1.	Get the QRadar http end point first
-2.	Run sudo ./patch_ceilometer.sh <<QRadar Http Endpoint Here>>
-3.	Start consumer service (this is new) by running this command:
+   1.	Run sudo ./patch_nova.sh
+   2.	Restart node api service.
+
+On ceilometer node::
+
+   1.	Get the QRadar http end point first
+   2.	Run sudo ./patch_ceilometer.sh HttpEndpoint>
+   3.	Start consumer service (this is new) by running this command:
 
    ceilometer-consumer –config-file /etc/ceilometer/consumer.conf
 
