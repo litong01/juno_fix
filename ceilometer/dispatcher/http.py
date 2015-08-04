@@ -84,10 +84,13 @@ class HttpDispatcher(dispatcher.Base):
             LOG.debug(msg)
             try:
                 if self.cadf_only:
-                    if msg.get('typeURI') != CADF_TYPEURI:
+                    if msg.get('request', {}).get('CADF_EVENT'):
+                        msg = msg.get('request').get('CADF_EVENT')
+                    elif msg.get('typeURI') != CADF_TYPEURI:
                         LOG.debug(_('Message type %s does match CADF message '
                                   'type') % msg.get('typeURI'))
                         continue
+
                 res = requests.post(self.target,
                                     data=json.dumps(msg),
                                     headers=self.headers,
