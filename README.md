@@ -1,7 +1,8 @@
 Instructions to setup OpenStack to send cadf messages to QRadar:
 
-Download the attached file named juno_fix.tar and untar to a
-directory on both nova api node and ceilometer node.
+Clone this project to a directory by running the following command:
+
+   git clone git://github.com/litong01/juno_fix.git
 
 On nova api node::
 
