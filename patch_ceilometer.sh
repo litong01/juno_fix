@@ -21,7 +21,7 @@ BIN_DIR=`dirname $CEILOMETER_BIN_FILE`
 
 cp ${TOP_DIR}/ceilometer-consumer ${BIN_DIR}
 awk -v ep=${ENDPOINT} -f ${TOP_DIR}/patch_ceilometer_conf.awk /etc/ceilometer/ceilometer.conf > /etc/ceilometer/consumer.conf
-EGG_FILE=`find /usr -type f -path "*/ceilometer-2014.2.*.egg-info/entry_points.txt"`
+EGG_FILE=`find /usr -type f -path "*/ceilometer-201*.egg-info/entry_points.txt"`
 echo Saving $EGG_FILE
 if [ ! -e "${EGG_FILE}.back" ]
 then
