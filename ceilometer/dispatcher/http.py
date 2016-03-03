@@ -85,7 +85,7 @@ class HttpDispatcher(dispatcher.Base):
             try:
                 if self.cadf_only:
                     if msg.get('resource_metadata', {}).get('request', {}).get('CADF_EVENT'):
-                        msg = msg.get('request').get('CADF_EVENT')
+                        msg = msg.get('resource_metadata', {}).get('request', {}).get('CADF_EVENT')
                     elif msg.get('typeURI') != CADF_TYPEURI:
                         LOG.debug(_('Message type %s does match CADF message '
                                   'type') % msg.get('typeURI'))
