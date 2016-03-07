@@ -82,24 +82,36 @@ class HttpDispatcher(dispatcher.Base):
 
         for msg in data:
             LOG.debug(msg)
+            # set this in case the message is not CADF, we want the whole thing
+            payload = msg
             try:
                 if self.cadf_only:
+
+                    # case where we get the event from audit_middleware, get the payload
+                    # from the nested request content
                     if msg.get('resource_metadata', {}).get('request', {}).get('CADF_EVENT'):
-                        msg = msg.get('resource_metadata', {}).get('request', {}).get('CADF_EVENT')
-                    elif msg.get('typeURI') != CADF_TYPEURI:
+                        LOG.debug(_('found audit_middleware type notification'))
+                        payload = msg.get('resource_metadata', {}).get('request', {}).get('CADF_EVENT')
+
+                    # case where keystone generates the notification without the request headers
+                    # it looks like ... {resource_metadata: {typeURI, initiator, target... }}
+                    if 'typeURI' in msg.get('resource_metadata', {}):
+                        LOG.debug(_('found keystone type notification'))
+                        payload = msg.get('resource_metadata')
+
+                    if payload and payload.get('typeURI') != CADF_TYPEURI:
                         LOG.debug(_('Message type %s does match CADF message '
-                                  'type') % msg.get('typeURI'))
+                                  'type') % payload.get('typeURI'))
                         continue
 
                 res = requests.post(self.target,
-                                    data=json.dumps(msg),
+                                    data=json.dumps(payload),
                                     headers=self.headers,
                                     timeout=self.timeout)
                 LOG.debug(_('Message posting finished with status code '
                             '%d.') % res.status_code)
             except Exception as err:
-                LOG.exception(_('Failed to record metering data: %s'),
-                              err)
+                LOG.exception(_('Failed to record metering data: %s'), err)
 
     def record_events(self, events):
         """ Juno does not support event recording yet"""
